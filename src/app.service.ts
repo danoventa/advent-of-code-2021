@@ -1,12 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, captureIncrement, checkCard, countIncrementsCurry, generateBingoGame, readBingos, readFileByLine, readFileByWindow, sumArray, translateCoordinatesFromLine } from './utils';
+import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, generateBingoGame, generateCloudCoordinates, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
 
 @Injectable()
 export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+
+
+  /** ######################
+   *  Day 5
+   *  ######################
+   */
+    getDay5Part1(): number {
+      let cloudCoordinatesReadout: CloudCoordinatesReadout = {cloudCoordinatesSet: []};
+      for (let line of readFileByLine('/inputs/day5Sample.txt', 'txt')){
+        cloudCoordinatesReadout.cloudCoordinatesSet.push(generateCloudCoordinates(line as string));
+      }
+
+      let cloudCoordinateTracking: CloudCoordinateTracking = {};
+      for (let coord of cloudCoordinatesReadout.cloudCoordinatesSet){
+        cloudCoordinateTracking = trackCloudCoordinates(coord, cloudCoordinateTracking);
+      }
+      const dangerZones = countDangerZones(cloudCoordinateTracking);
+
+      return dangerZones;
+    }
+
+    getDay5Part2(): number {
+      let cloudCoordinatesReadout: CloudCoordinatesReadout = {cloudCoordinatesSet: []};
+      for (let line of readFileByLine('/inputs/day5Input1.txt', 'txt')){
+        cloudCoordinatesReadout.cloudCoordinatesSet.push(generateCloudCoordinates(line as string));
+      }
+
+      let cloudCoordinateTracking: CloudCoordinateTracking = {};
+
+      for (let coord of cloudCoordinatesReadout.cloudCoordinatesSet){
+        cloudCoordinateTracking = trackCloudCoordinates(coord, cloudCoordinateTracking);
+      }
+      const dangerZones = countDangerZones(cloudCoordinateTracking);
+
+      return dangerZones;    }
 
     /** ######################
    *  Day 4

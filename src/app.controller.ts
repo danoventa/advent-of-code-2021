@@ -10,6 +10,22 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  /**
+   * 
+   * Day 5
+   */
+   @Get() 
+   getDay5Part1(): number {
+     return this.appService.getDay5Part1();
+   }
+ 
+   @Get() 
+   getDay5Part2(): number {
+     return this.appService.getDay5Part2();
+   }
+ 
+
+
  /**
    * 
    *  Day 4

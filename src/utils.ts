@@ -1,5 +1,152 @@
+import { CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
 import * as fs from 'fs';
 
+
+/**
+ * Day 5
+ */
+export interface CloudCoordinates {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+}
+
+export interface CloudCoordinatesReadout {
+    cloudCoordinatesSet: CloudCoordinates[];
+}
+
+export interface CloudCoordinateCol {
+    [colIndex: number]: number;
+}
+
+export interface CloudCoordinateTracking {
+    [rowIndex: number]: CloudCoordinateCol;
+}
+
+export const countDangerZones = (trackedClouds: CloudCoordinateTracking): number => {
+    let dangerZones = 0;
+    for (let yCoord of Object.keys(trackedClouds)){
+        for(let xCoord of Object.keys(trackedClouds[yCoord])){
+            if(trackedClouds[yCoord][xCoord] > 1){
+                dangerZones += 1;
+            }
+        }
+    }
+    return dangerZones;
+}
+
+enum CoordinateBoard {
+    TBD = 'TBD',
+    ONE_POINT = 'ONE_POINT',
+    VERTICAL_LINE = 'VERTICAL_LINE',
+    HORIZONTAL_LINE = 'HORIZONTAL_LINE',
+    DIAGONAL_LINE = 'DIAGONAL_LINE',
+}
+
+
+const logicBoard = (x1: number, y1: number, x2: number, y2: number): CoordinateBoard => {
+    if (x1 !== x2 && y1 === y2) return CoordinateBoard.HORIZONTAL_LINE;
+    if (x1 === x2 && y1 !== y2) return CoordinateBoard.VERTICAL_LINE;
+    if (x1 === x2 && y1 === y2) return CoordinateBoard.ONE_POINT;
+    if (x1 !== x2 && y1 !== y2) return CoordinateBoard.DIAGONAL_LINE;
+    return CoordinateBoard.TBD;
+};
+
+const calculateRowsAffected = (coord: CloudCoordinates, routing: CoordinateBoard): number[] => {
+
+    if (routing === CoordinateBoard.HORIZONTAL_LINE || routing === CoordinateBoard.ONE_POINT){
+        // we are in teh same row, row  = 1;
+        return [coord.y1];
+    } else if (routing === CoordinateBoard.VERTICAL_LINE || routing === CoordinateBoard.DIAGONAL_LINE) {
+        const targetRows = [];
+        const [startY, endY] = coord.y1 > coord.y2 
+        ? [coord.y2, coord.y1]
+        : [coord.y1, coord.y2];
+
+        for(let i = startY; i <= endY; i++){
+            targetRows.push(i);
+        }
+        return coord.y1 > coord.y2 ? targetRows.reverse() : targetRows 
+    }
+    return  [];
+}
+
+export const trackCloudCoordinates = (coord: CloudCoordinates, rows: CloudCoordinateTracking): CloudCoordinateTracking => {
+    const [x1, y1, x2, y2] = Object.values(coord);
+
+    const routing = logicBoard(x1, y1, x2, y2);
+    const targetRows = calculateRowsAffected(coord, routing);
+
+    if (routing !== CoordinateBoard.DIAGONAL_LINE){
+        const [startX, endX] = coord.x1 > coord.x2 
+        ? [coord.x2, coord.x1]
+        : [coord.x1, coord.x2];
+
+        for (let yCoord of targetRows) {
+            for (let i = startX; i <= endX; i++){
+                if(!rows[yCoord]){
+                    rows = {
+                        ...rows,
+                        [yCoord]: {}
+                    }
+                }
+                if(rows[yCoord][i]){
+                    rows[yCoord][i] += 1;
+                } else {
+                    rows[yCoord] = {
+                        ...rows[yCoord],
+                        [i]: 1,
+                    }
+                }
+            }
+        }
+    } else {
+        let i = coord.x1;
+        const iterNum = coord.x1 > coord.x2 ? -1 : 1;
+
+        for (let yCoord of targetRows) {
+            if(!rows[yCoord]){
+                rows = {
+                    ...rows,
+                    [yCoord]: {}
+                }
+            }
+            if(rows[yCoord][i]){
+                rows[yCoord][i] += 1;
+            } else {
+                rows[yCoord] = {
+                    ...rows[yCoord],
+                    [i]: 1,
+                }
+            }
+            i += iterNum;
+        }
+    }
+
+    return rows;
+}
+
+export const generateCloudCoordinates = (instructions: string): CloudCoordinates => {
+    const [x1, y1, x2, y2] = instructions
+        .split(' -> ')
+        .reduce((coors: number[], ins: string): number[] => [
+            ...coors,
+            ...ins.split(',').map((coor: string) => parseInt(coor))
+        ], []);
+
+    return ({
+        x1,
+        y1,
+        x2,
+        y2
+    });
+}
+
+
+/** 
+ * Day 4 & Below
+ */
 export interface BingoCard {
     rows: number[][]
 }

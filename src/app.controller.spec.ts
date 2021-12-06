@@ -21,6 +21,21 @@ describe('AppController', () => {
   });
 
   /**
+   * Day 5
+   */
+  describe('day 5 part 1', () => {
+    it('should be the answer to day 5 part 1', () => {
+      expect(appController.getDay5Part1()).toBe(12);
+    });
+  });
+    
+  describe('day 5 part 2', () => {
+    it('should be the answer to day 5 part 2', () => {
+      expect(appController.getDay5Part2()).toBe(17741);
+    });
+  });
+
+  /**
    * Day 4
    */
    describe('day4 part 1', () => {
@@ -34,6 +49,7 @@ describe('AppController', () => {
       expect(appController.getDay4Part2()).toBe(22704);
     });
   });
+
   /**
    * Day 3
    */
