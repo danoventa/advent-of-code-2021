@@ -1,6 +1,63 @@
-import { CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { spawn } from 'child_process';
 import * as fs from 'fs';
 
+
+/**
+ * Day 7
+ */
+
+
+/** ######################
+ *  Day 6
+ *  ######################
+ */
+
+export const calculateFishies = (fishies: number[], days: number): number => {
+    const fishyPod: Fishy = fishies.reduce((acc: Fishy, initSpawn: number) => {
+        if (!acc[initSpawn]) {
+            return {
+                ...acc,
+                [initSpawn]: 1
+            }
+        } else {
+            acc[initSpawn] += 1;
+        }
+        return acc;
+    }, {});
+
+    return Object.entries(fishyPod).reduce((acc: number, [spawnKey, spawnCount]: [string, number]) => {
+        return acc += (spawnCount * calculateFishieGeneration(parseInt(spawnKey), days));
+    }, 0);
+}
+
+export const calculateFishieGeneration = (spawn: number, days: number): number => {
+    const generations = [0,0,0,0,0,0,0,0,0];
+    generations[spawn] = 1;
+    for (let i = 0; i < days; i++){
+        let first = generations.shift();
+        generations.push(first);
+        generations[6] += first;
+    }
+    return generations.reduce((acc, val) => acc + val, 0);
+}
+
+interface Fishy {
+    [fishyStart: string]: number;
+}
+
+export interface FishCapture {
+    fishes: number[];
+}
+
+export const loadFirstFish = (fishesList: string[]) => {
+    const fishCapture: FishCapture = {
+        fishes: []
+    }
+    for (let fishDays of fishesList){
+        fishCapture.fishes.push(parseInt(fishDays))
+    }
+    return fishCapture;
+}
 
 /**
  * Day 5
@@ -54,9 +111,7 @@ const logicBoard = (x1: number, y1: number, x2: number, y2: number): CoordinateB
 };
 
 const calculateRowsAffected = (coord: CloudCoordinates, routing: CoordinateBoard): number[] => {
-
     if (routing === CoordinateBoard.HORIZONTAL_LINE || routing === CoordinateBoard.ONE_POINT){
-        // we are in teh same row, row  = 1;
         return [coord.y1];
     } else if (routing === CoordinateBoard.VERTICAL_LINE || routing === CoordinateBoard.DIAGONAL_LINE) {
         const targetRows = [];

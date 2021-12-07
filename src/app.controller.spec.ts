@@ -20,6 +20,39 @@ describe('AppController', () => {
     });
   });
 
+/**
+ * Day 7
+ */
+ describe('day 7 part 1', () => {
+  it('should be the answer to day 7 part 1', () => {
+    expect(appController.getDay7Part1()).toBe(363101);
+  });
+});
+  
+describe('day 7 part 2', () => {
+  it('should be the answer to day 7 part 2', () => {
+    expect(appController.getDay7Part2()).toBe(1644286074024);
+  });
+});
+
+
+  /** ######################
+ *  Day 6
+ *  ######################
+ */
+   describe('day 6 part 1', () => {
+    it('should be the answer to day 6 part 1', () => {
+      expect(appController.getDay6Part1()).toBe(363101);
+    });
+  });
+    
+  describe('day 6 part 2', () => {
+    it('should be the answer to day 5 part 2', () => {
+      expect(appController.getDay6Part2()).toBe(1644286074024);
+    });
+  });
+
+
   /**
    * Day 5
    */

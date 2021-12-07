@@ -19,6 +19,18 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
+    getDay5Part1() {
+        return this.appService.getDay5Part1();
+    }
+    getDay5Part2() {
+        return this.appService.getDay5Part2();
+    }
+    getDay4Part1() {
+        return this.appService.getDay4Part1();
+    }
+    getDay4Part2() {
+        return this.appService.getDay4Part2();
+    }
     getDay3Part1() {
         return this.appService.getDay3Part1();
     }
@@ -44,6 +56,30 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Number)
+], AppController.prototype, "getDay5Part1", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Number)
+], AppController.prototype, "getDay5Part2", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Number)
+], AppController.prototype, "getDay4Part1", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Number)
+], AppController.prototype, "getDay4Part2", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

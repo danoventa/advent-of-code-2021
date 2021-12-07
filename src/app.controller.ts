@@ -10,6 +10,35 @@ export class AppController {
     return this.appService.getHello();
   }
 
+/**
+ * 
+ * Day 7
+ */
+
+ @Get() 
+ getDay7Part1(): number {
+   return this.appService.getDay7Part1();
+ }
+
+ @Get() 
+ getDay7Part2(): number {
+   return this.appService.getDay7Part2();
+ }
+
+/** ######################
+ *  Day 6
+ *  ######################
+ */
+  @Get() 
+  getDay6Part1(): number {
+    return this.appService.getDay6Part1();
+  }
+ 
+  @Get() 
+  getDay6Part2(): number {
+    return this.appService.getDay6Part2();
+  }
+
   /**
    * 
    * Day 5
@@ -24,7 +53,6 @@ export class AppController {
      return this.appService.getDay5Part2();
    }
  
-
 
  /**
    * 

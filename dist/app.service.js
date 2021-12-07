@@ -13,6 +13,76 @@ let AppService = class AppService {
     getHello() {
         return 'Hello World!';
     }
+    getDay5Part1() {
+        let cloudCoordinatesReadout = { cloudCoordinatesSet: [] };
+        for (let line of (0, utils_1.readFileByLine)('/inputs/day5Sample.txt', 'txt')) {
+            cloudCoordinatesReadout.cloudCoordinatesSet.push((0, utils_1.generateCloudCoordinates)(line));
+        }
+        let cloudCoordinateTracking = {};
+        for (let coord of cloudCoordinatesReadout.cloudCoordinatesSet) {
+            cloudCoordinateTracking = (0, utils_1.trackCloudCoordinates)(coord, cloudCoordinateTracking);
+        }
+        const dangerZones = (0, utils_1.countDangerZones)(cloudCoordinateTracking);
+        return dangerZones;
+    }
+    getDay5Part2() {
+        let cloudCoordinatesReadout = { cloudCoordinatesSet: [] };
+        for (let line of (0, utils_1.readFileByLine)('/inputs/day5Input1.txt', 'txt')) {
+            cloudCoordinatesReadout.cloudCoordinatesSet.push((0, utils_1.generateCloudCoordinates)(line));
+        }
+        let cloudCoordinateTracking = {};
+        for (let coord of cloudCoordinatesReadout.cloudCoordinatesSet) {
+            cloudCoordinateTracking = (0, utils_1.trackCloudCoordinates)(coord, cloudCoordinateTracking);
+        }
+        const dangerZones = (0, utils_1.countDangerZones)(cloudCoordinateTracking);
+        return dangerZones;
+    }
+    getDay4Part1() {
+        const bingoGame = (0, utils_1.generateBingoGame)();
+        let winner;
+        let winningCall;
+        for (let call of bingoGame.calls) {
+            for (let index in bingoGame.cards) {
+                const reportCard = (0, utils_1.checkCard)(call, bingoGame.cards[index]);
+                bingoGame.cards[index] = reportCard.card;
+                if (reportCard.status) {
+                    winner = bingoGame.cards[index];
+                    winningCall = call;
+                    break;
+                }
+                ;
+            }
+            if (winner) {
+                break;
+            }
+        }
+        const winningSum = (0, utils_1.calculateBingoSum)(winner);
+        return winningSum * winningCall;
+    }
+    getDay4Part2() {
+        const bingoGame = (0, utils_1.generateBingoGame)();
+        const winners = { winners: [] };
+        const winnersIndex = [];
+        for (let call of bingoGame.calls) {
+            for (let index in bingoGame.cards) {
+                if (winnersIndex.includes(index))
+                    continue;
+                const reportCard = (0, utils_1.checkCard)(call, bingoGame.cards[index]);
+                bingoGame.cards[index] = reportCard.card;
+                if (reportCard.status) {
+                    winnersIndex.push(index);
+                    winners.winners.push({
+                        winningCard: bingoGame.cards[index],
+                        winningCall: call
+                    });
+                }
+                ;
+            }
+        }
+        const lastWinner = winners.winners.pop();
+        const lastWinningSum = (0, utils_1.calculateBingoSum)(lastWinner.winningCard);
+        return lastWinner.winningCall * lastWinningSum;
+    }
     getDay3Part1() {
         let count = 0;
         let cursor;
@@ -39,47 +109,39 @@ let AppService = class AppService {
             if (cursor) {
                 const binaryLineList = line.split('');
                 lineTracker.push(binaryLineList.map(val => parseInt(val)));
-                cursor[0] = cursor[0] + parseInt(binaryLineList[0]);
             }
             else {
                 cursor = line.split('').map(val => parseInt(val));
-                lineTracker.push(cursor);
             }
             count += 1;
         }
-        const firstBlood = Math.round(cursor[0] / count);
-        for (let i = 0; i < lineTracker.length; i++) {
-            if (lineTracker[i][0] !== firstBlood) {
-                lineTracker.splice(i, 1);
-            }
-        }
-        let stillLooking = true;
-        let iter = 1;
-        let maxLength = lineTracker[0].length;
-        while (stillLooking) {
-            count = 0;
-            let counter = 0;
-            for (let line of lineTracker) {
-                counter += line[iter];
-                count += 1;
-            }
-            let blood = counter / count;
-            for (let i = 0; i < lineTracker.length; i++) {
-                if (lineTracker[i][iter] !== blood) {
-                    lineTracker.splice(i, 1);
+        const getCommonItem = (items, target) => {
+            let reductionList = items;
+            for (let cursor = 0; cursor < reductionList[0].length; cursor++) {
+                let sum = 0;
+                for (let item of reductionList) {
+                    sum += item[cursor];
                 }
-                if (lineTracker.length === 1) {
-                    stillLooking = false;
+                const meanCalc = sum / reductionList.length;
+                const common = Math.round(meanCalc) ^ (target ^ 1);
+                if (reductionList.length === 1)
+                    break;
+                let nextReductionList = [];
+                for (let item of reductionList) {
+                    if (item[cursor] === common) {
+                        nextReductionList.push(item);
+                    }
                 }
+                reductionList = nextReductionList;
             }
-            iter++;
-            if (iter >= maxLength) {
-                stillLooking = false;
-            }
-        }
-        const oxyLine = lineTracker[0].join('');
+            return reductionList[0].join('');
+        };
+        const getOxyLine = (items) => getCommonItem(items, 1);
+        const getCo2Line = (items) => getCommonItem(items, 0);
+        const co2Line = getOxyLine(lineTracker);
+        const oxyLine = getCo2Line(lineTracker);
         const oxy = parseInt(oxyLine, 2);
-        const co2 = parseInt(lineTracker[0].map((letter) => letter ^ 1).join(''), 2);
+        const co2 = parseInt(co2Line, 2);
         return oxy * co2;
     }
     getDay2Part1() {

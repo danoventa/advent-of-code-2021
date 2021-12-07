@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, generateBingoGame, generateCloudCoordinates, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
+import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, generateBingoGame, generateCloudCoordinates, loadFirstFish, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
 
 @Injectable()
 export class AppService {
@@ -8,6 +8,42 @@ export class AppService {
     return 'Hello World!';
   }
 
+  /**
+   * 
+   * Day 7
+   */
+  getDay7Part1(): number {
+    return 0;
+  }
+
+  getDay7Part2(): number {
+    return 0;
+  }
+
+  /** ######################
+   *  Day 6
+   *  ######################
+   */
+
+  getDay6Part1(): number {
+    let fishCapture;
+    for (let line of readFileByLine('/inputs/day6Input.txt', 'txt')){
+      const fishes = (line as string).split(',');
+      fishCapture = loadFirstFish(fishes); 
+    }
+
+    return calculateFishies(fishCapture.fishes, 80);
+  }
+
+  getDay6Part2(): number {
+    let fishCapture;
+    for (let line of readFileByLine('/inputs/day6Input.txt', 'txt')){
+      const fishes = (line as string).split(',');
+      fishCapture = loadFirstFish(fishes); 
+    }
+
+    return calculateFishies(fishCapture.fishes, 256); 
+  }
 
   /** ######################
    *  Day 5
@@ -35,13 +71,13 @@ export class AppService {
       }
 
       let cloudCoordinateTracking: CloudCoordinateTracking = {};
-
       for (let coord of cloudCoordinatesReadout.cloudCoordinatesSet){
         cloudCoordinateTracking = trackCloudCoordinates(coord, cloudCoordinateTracking);
       }
       const dangerZones = countDangerZones(cloudCoordinateTracking);
 
-      return dangerZones;    }
+      return dangerZones;    
+    }
 
     /** ######################
    *  Day 4
