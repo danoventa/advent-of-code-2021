@@ -23,15 +23,15 @@ describe('AppController', () => {
 /**
  * Day 7
  */
- describe('day 7 part 1', () => {
-  it('should be the answer to day 7 part 1', () => {
-    expect(appController.getDay7Part1()).toBe(363101);
+ describe('day 8 part 1', () => {
+  it('should be the answer to day 8 part 1', () => {
+    expect(appController.getDay8Part1()).toBe(514);
   });
 });
   
-describe('day 7 part 2', () => {
-  it('should be the answer to day 7 part 2', () => {
-    expect(appController.getDay7Part2()).toBe(1644286074024);
+describe('day 8 part 2', () => {
+  it('should be the answer to day 8 part 2', () => {
+    expect(appController.getDay8Part2()).toBe(1644286074024);
   });
 });
 

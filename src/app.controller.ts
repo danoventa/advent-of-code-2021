@@ -12,17 +12,17 @@ export class AppController {
 
 /**
  * 
- * Day 7
+ * Day 8
  */
 
  @Get() 
- getDay7Part1(): number {
-   return this.appService.getDay7Part1();
+ getDay8Part1(): number {
+   return this.appService.getDay8Part1();
  }
 
  @Get() 
- getDay7Part2(): number {
-   return this.appService.getDay7Part2();
+ getDay8Part2(): number {
+   return this.appService.getDay8Part2();
  }
 
 /** ######################

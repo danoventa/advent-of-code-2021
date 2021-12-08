@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, generateBingoGame, generateCloudCoordinates, loadFirstFish, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
+import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, deccodeForReal, decode, generateBingoGame, generateCloudCoordinates, loadFirstFish, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
 
 @Injectable()
 export class AppService {
@@ -8,11 +8,43 @@ export class AppService {
     return 'Hello World!';
   }
 
+   /**
+   * 
+   * Day 8
+   */
+    getDay8Part1(): number {
+      let sumCursor = 0;
+      for (let line of readFileByLine('/inputs/day8Inputs.txt', 'txt')){
+        const [_, digitsLine] = (line as string).split(' | ');
+        const digits = digitsLine.split(' ').map((val) => val.split('').sort().join(''));
+        sumCursor += decode(digits);
+      }
+
+      return sumCursor;
+    }
+  
+    getDay8Part2(): number {
+      let sumCursor = 0;
+      for (let line of readFileByLine('/inputs/day8Inputs.txt', 'txt')){
+        const [decoderLine, digitsLine] = (line as string).split(' | ');
+        const decoders = decoderLine.split(' ').map((val) => val.split('').sort().join(''));
+        const digits = digitsLine.split(' ').map((val) => val.split('').sort().join(''));
+        sumCursor += deccodeForReal(decoders, digits);
+      }
+
+      return sumCursor;
+    }
+
   /**
    * 
    * Day 7
    */
   getDay7Part1(): number {
+    let things: number[];
+    for (let line of readFileByLine('/inputs/day7Input.txt', 'txt')){
+      things = (line as string).split(',').map((val: string) => parseInt(val));
+    }
+
     return 0;
   }
 

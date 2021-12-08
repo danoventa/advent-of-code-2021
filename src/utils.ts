@@ -1,5 +1,158 @@
 import { spawn } from 'child_process';
 import * as fs from 'fs';
+import { mergeMap } from 'rxjs';
+
+/**
+ * Day 8
+ */
+interface Decoded {
+    [code: string]: number;
+}
+/**
+
+0:      1:      2:      3:      4:
+aaaa    ....    aaaa    aaaa    ....
+b    c  .    c  .    c  .    c  b    c
+b    c  .    c  .    c  .    c  b    c
+....    ....    dddd    dddd    dddd
+e    f  .    f  e    .  .    f  .    f
+e    f  .    f  e    .  .    f  .    f
+gggg    ....    gggg    gggg    ....
+
+ 5:      6:      7:      8:      9:
+aaaa    aaaa    aaaa    aaaa    aaaa
+b    .  b    .  .    c  b    c  b    c
+b    .  b    .  .    c  b    c  b    c
+dddd    dddd    ....    dddd    dddd
+.    f  e    f  .    f  e    f  .    f
+.    f  e    f  .    f  e    f  .    f
+gggg    gggg    ....    gggg    gggg
+
+ */
+
+// stirng arr
+// 0 -> top
+// 1 -> topLeft
+// 2 -> topRight
+// 3
+
+enum positionsEnum {
+    top,
+    topLeft,
+    topRight,
+    middle,
+    bottomLeft,
+    bottomRight,
+    bottom
+}
+
+const mapCodes = (decoders: string[]) => {
+    const codedMap = decoders.reduce((acc, decoder) => ({
+        ...acc,
+        [decoder]: decoder.length
+    }), {});
+
+    return codedMap;
+}
+
+const simpleCodes = (codeMaps) => {
+    // 2 -> 1
+    // 4 -> 4
+    // 3 -> 7
+    // 7 -> 8
+
+    return ({
+        [Object.entries(codeMaps).filter(([_, len]) => len === 2)[0][0]]: 1,
+        [Object.entries(codeMaps).filter(([_, len]) => len === 4)[0][0]]: 4,
+        [Object.entries(codeMaps).filter(([_, len]) => len === 3)[0][0]]: 7,
+        [Object.entries(codeMaps).filter(([_, len]) => len === 7)[0][0]]: 8
+    })
+}
+
+const decodeItemsOfACertainLength = (simpleDecoded, codeMaps) => {
+    const decoderMap = {
+        5: {
+            5: 9,
+            3: 7,
+            2: 10
+        },
+        6: {
+            9: 9,
+            6: 12,
+            0: 10,
+        },
+    }
+    // const simpleCodes = [2, 4, 3]
+
+    const decoded = Object.entries(codeMaps).reduce((acc, [key, val]) => {
+        if (![5, 6].includes(key.length)) return acc;
+        let diffVal = 0;
+
+        for (let [code, num] of Object.entries(simpleDecoded)){
+            let tempKey = key;
+
+            if (num === '8') continue;
+
+            for (let letter of (code as string).split('')){
+                tempKey = tempKey.replace(letter, '');
+            }
+            diffVal += tempKey.length
+        }
+    
+
+        let num: number;
+        for(let [nume, val] of Object.entries(decoderMap[key.length])){
+            if (val === diffVal) {
+                num = parseInt(nume);
+            }
+        }
+        
+        return {
+            ...acc,
+            [key]: num
+        }
+    }, {})
+
+    return decoded;
+}
+
+
+export const deccodeForReal = (decoders: string[], digits: string[]): number => {
+    const codeMaps = mapCodes(decoders);
+    const knownUniverse = simpleCodes(codeMaps);
+
+    const allDecoded = {
+        ...knownUniverse,
+        ...decodeItemsOfACertainLength(knownUniverse, codeMaps)
+    }
+
+    const decodedDigits = [];
+    for(let digit of digits){
+        decodedDigits.push(allDecoded[digit])
+    }
+
+    return parseInt(decodedDigits.join(''));
+}
+
+export const decode = (decoders: string[]): number => {
+    return decodeSimpleCases(decoders);
+}
+
+const decodeSimpleCases = (decoders: string[]) => {
+    const simpleCodes = [2, 4, 3, 7]
+    const decoded: Decoded = simpleCodes.reduce((acc, code) => ({...acc, [code]: 0}), {});
+
+    for (let decoder of decoders){
+        if(simpleCodes.includes(decoder.length)) {
+            decoded[decoder.length] += 1;
+        }
+    }
+
+    return Object.entries(decoded).reduce((acc, [_, val]) => acc + val, 0);
+}
+
+
+
 
 
 /**
