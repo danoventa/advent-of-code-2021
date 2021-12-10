@@ -1,6 +1,134 @@
-import { spawn } from 'child_process';
 import * as fs from 'fs';
-import { mergeMap } from 'rxjs';
+
+/**
+ * Day 9
+ */
+const findLocalMins = (matrix: number[][]): number[][] => {
+    let localMins = []
+    for (let rowIndex=0; rowIndex < matrix.length; rowIndex++){
+        for (let colIndex=0; colIndex < matrix[0].length; colIndex++){
+            let count = 0;
+            if(matrix[rowIndex-1] && matrix[rowIndex-1][colIndex] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex-1][colIndex] ? 1 : 0;
+            } else {
+                count += 1;
+            }
+
+            if(matrix[rowIndex+1] && matrix[rowIndex+1][colIndex] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex+1][colIndex] ? 1 : 0;
+            } else {
+
+                count += 1;
+            }
+
+            if(matrix[rowIndex][colIndex - 1] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex][colIndex - 1] ? 1 : 0;
+            } else {
+                count += 1;
+            }
+
+            if(matrix[rowIndex][colIndex + 1] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex][colIndex + 1] ? 1 : 0;
+            } else {
+                count += 1;
+            }
+
+            if (count === 4) {
+                localMins.push([rowIndex, colIndex]);
+            }
+        }
+    }
+    return localMins;
+}
+
+const nextCoordinates = ([row, col]: number[], matrix: number[][]) => {
+    const traversalPoints = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+    const nextAvail: number[][] = [];
+    for (let [r, c] of traversalPoints){
+        if(matrix[row+r] && matrix[row+r][col+c] !== undefined && matrix[row+r][col+c] !== 9 && matrix[row][col] < matrix[row+r][col+c]){
+            nextAvail.push([row+r, col+c]);
+        }
+    }
+    return nextAvail;
+}
+
+interface BasinTracker {
+    [coordinates: string]: number;
+}
+
+const traverseCoordinates = (nextAvail: number[], matrix: number[][], basin: BasinTracker) => {
+    const [row, col] = nextAvail;
+    const key = nextAvail.join(',');
+    basin = {
+        ...basin,
+        [key]: 1
+    }
+
+    const nextCoords = nextCoordinates(nextAvail, matrix);
+
+    if (nextCoords.length === 0) return basin;
+
+
+    matrix[row][col] = 9;
+    for (let nextCoord of nextCoords){
+        basin = {
+            ...basin,
+            ...traverseCoordinates(nextCoord, matrix, basin)
+        };
+    }
+    return basin;
+}
+
+export const multiplicate3MaxBasins = (matrix: number[][]) => {
+    const localMins = findLocalMins(matrix);
+    let basins: BasinTracker[] = [];
+    for (let localMin of localMins){
+        basins.push(traverseCoordinates(localMin, matrix, {}));
+    }
+    return basins.map((basin) => Object.values(basin).reduce((acc, val) => acc + val), 0)
+                .sort((a, b) => b-a)
+                .slice(0, 3)
+                .reduce((acc, val) => acc * val, 1);
+}
+
+export const findLocalMinimum = (matrix: number[][]) => {
+    let localMins = []
+    for (let rowIndex=0; rowIndex < matrix.length; rowIndex++){
+        for (let colIndex=0; colIndex < matrix[0].length; colIndex++){
+            let count = 0;
+            if(matrix[rowIndex-1] && matrix[rowIndex-1][colIndex] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex-1][colIndex] ? 1 : 0;
+            } else {
+                count += 1;
+            }
+
+            if(matrix[rowIndex+1] && matrix[rowIndex+1][colIndex] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex+1][colIndex] ? 1 : 0;
+            } else {
+
+                count += 1;
+            }
+
+            if(matrix[rowIndex][colIndex - 1] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex][colIndex - 1] ? 1 : 0;
+            } else {
+                count += 1;
+            }
+
+            if(matrix[rowIndex][colIndex + 1] !== undefined){
+                count += matrix[rowIndex][colIndex] < matrix[rowIndex][colIndex + 1] ? 1 : 0;
+            } else {
+                count += 1;
+            }
+
+            if (count === 4) {
+                localMins.push(matrix[rowIndex][colIndex]);
+            }
+        }
+    }
+    return localMins.reduce((acc, val) => acc + (val + 1), 0)
+}
 
 /**
  * Day 8

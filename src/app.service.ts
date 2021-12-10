@@ -1,12 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, deccodeForReal, decode, generateBingoGame, generateCloudCoordinates, loadFirstFish, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
+import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, deccodeForReal, decode, findLocalMinimum, generateBingoGame, generateCloudCoordinates, loadFirstFish, multiplicate3MaxBasins, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
 
 @Injectable()
 export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+
+  /**
+   * 
+   * Day 9 
+   */
+
+
+  getDay9Part1(): number {
+    let matrix: number[][] = [];
+    for (let line of readFileByLine('/inputs/day9inputs.txt', 'txt')){
+      const row: number[]  = (line as string).split('').map((val) => parseInt(val));
+      matrix.push(row);
+    }
+
+    return findLocalMinimum(matrix);
+  }
+
+
+  getDay9Part2(): number {
+    let matrix: number[][] = [];
+    for (let line of readFileByLine('/inputs/day9inputs.txt', 'txt')){
+      const row: number[]  = (line as string).split('').map((val) => parseInt(val));
+      matrix.push(row);
+    }
+
+    return multiplicate3MaxBasins(matrix);
+  }
+
 
    /**
    * 

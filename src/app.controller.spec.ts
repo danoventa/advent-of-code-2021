@@ -21,7 +21,22 @@ describe('AppController', () => {
   });
 
 /**
- * Day 7
+ * Day 9
+ */
+ describe('day 9 part 1', () => {
+  it('should be the answer to day 9 part 1', () => {
+    expect(appController.getDay9Part1()).toBe(564);
+  });
+});
+  
+describe('day 9 part 2', () => {
+  it('should be the answer to day 9 part 2', () => {
+    expect(appController.getDay9Part2()).toBe(1038240);
+  });
+});
+
+/**
+ * Day 8
  */
  describe('day 8 part 1', () => {
   it('should be the answer to day 8 part 1', () => {
@@ -31,7 +46,7 @@ describe('AppController', () => {
   
 describe('day 8 part 2', () => {
   it('should be the answer to day 8 part 2', () => {
-    expect(appController.getDay8Part2()).toBe(1644286074024);
+    expect(appController.getDay8Part2()).toBe(1012272);
   });
 });
 
