@@ -279,12 +279,8 @@ const decodeSimpleCases = (decoders: string[]) => {
     return Object.entries(decoded).reduce((acc, [_, val]) => acc + val, 0);
 }
 
-
-
-
-
 /**
- * Day 7
+ * Day 7 -> lost in the ether of gitpod.io ( not their fault, I signed in to a work account when I did it and couldn't push back the changes, not commited enough to save them. Probably the best, most efficient solution. We'll never know)
  */
 
 
