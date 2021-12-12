@@ -1,6 +1,232 @@
 import * as fs from 'fs';
 
 /**
+ * 
+ * Day 11 
+ */
+export const solveProblem11P2 = (lines: string[], steps: number) => {
+    let matrix = buildOctoMatrix(lines);
+
+    let totalFlashes = 0;
+    for (let step = 0; step < steps; step++){
+        matrix = incrementOctotrix(matrix);
+        let [nMatrix, nFlashed] = checkForFlash(matrix, new Set([]));  
+
+        matrix = nMatrix;
+
+        if(matrix.length * matrix[0].length === nFlashed.size) return step + 1;
+
+        totalFlashes += nFlashed.size;
+    }
+    return 0;
+}
+const buildOctoMatrix = (lines: string[]) => {
+    let matrix: number[][] = [];
+    for (let num of lines) {
+        matrix.push(num.split('').map((val => parseInt(val))));
+    }
+    return matrix;
+}
+
+const incrementOctotrix = (matrix: number[][]) => {
+    for (let row in matrix){
+        for (let col in matrix[row]){
+            if(matrix[row][col] <= 9){
+                matrix[row][col] += 1;
+            }
+        }
+    }
+    return matrix;
+}
+
+export const throttle = () => {
+    const start = Date.now();
+    let time = 0;
+    while (time < 1000){
+        time = (Date.now() - start)
+    }
+}
+
+const getFlashableNeighbors = (my: number[], matrix: number[][], flashed: Set<string>) => {
+    const coordsToCheck = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+    const [row, col] = my;
+    const nextAvail: number[][] = [];
+    for (let [r, c] of coordsToCheck){
+        if(
+            matrix[row+r] 
+            && matrix[row+r][col+c] !== undefined 
+            && matrix[row+r][col+c] !== 0
+            && matrix[row+r][col+c] < 10
+            && !flashed.has([row+r, col+c].join(','))
+        ){
+            nextAvail.push([row+r, col+c]);
+        }
+    }
+
+    return nextAvail;
+}
+
+const checkForFlash = (matrix: number[][], flashed: Set<string>) => {
+    const flashing: number[][] = []
+    for (let row in matrix){
+        for(let col in matrix[row]){
+            let cursor = matrix[row][col];
+            let cursorKey = [row,col].join(',')
+            if (cursor >= 10 && !flashed.has(cursorKey)){
+                flashing.push([parseInt(row), parseInt(col)])
+                matrix[row][col] = 0;
+                flashed.add(cursorKey);
+            }            
+        }
+    }
+
+    if (flashing.length === 0) return [matrix, flashed];
+
+    let flashableNeighbors: number[][] = flashing.reduce((acc, flash) => {
+        return [
+            ...acc,
+            ...getFlashableNeighbors(flash, matrix, flashed)
+        ];
+    }, [] as number[][]);
+
+    flashableNeighbors = [...new Set(flashableNeighbors)];
+    
+    if (flashableNeighbors.length === 0 ) return [matrix, flashed];
+
+    let [nMatrix, nFlashed] = flashableNeighbors.reduce(([nextMatrix, nextFlashed], neighbor) => {
+        let [r, c] = neighbor;
+        if(nextMatrix[r][c] !== 0){
+            nextMatrix[r][c] += 1
+        }
+        return checkForFlash(nextMatrix, nextFlashed)
+    }, [matrix, flashed]);
+
+    return [nMatrix, nFlashed];
+}
+
+export const solveProblem11P1 = (lines: string[], steps: number) => {
+    let matrix = buildOctoMatrix(lines);
+
+    let totalFlashes = 0;
+    for (let step = 0; step < steps; step++){
+        matrix = incrementOctotrix(matrix);
+
+        let [nMatrix, nFlashed] = checkForFlash(matrix, new Set([]));  
+        matrix = nMatrix;
+        totalFlashes += nFlashed.size;
+    }
+    return totalFlashes;
+}
+
+
+/**
+ * Day 10
+ */
+
+const countPoints = (illegalChar: string): number => {
+    const pointsMap = {
+        ")": 3,
+        "]": 57,
+        "}": 1197,
+        ">": 25137
+    }
+    return pointsMap[illegalChar];
+}
+
+const processNewPoints = (chars: string[]): number => {
+    const charMap = {
+        "(": 1,
+        "[": 2,
+        "{": 3,
+        "<": 4
+    }
+
+    let score = 0;
+    for (let char of chars){
+        score *= 5;
+        score += charMap[char];
+    }
+    return score;
+}
+
+export const processLine2 = (line: string): number => {
+    const chars = line.split('');
+    const openChars = new Set(["(", "[", "{", "<"]);
+    const charMap = {
+        ")": "(",
+        "]": "[",
+        "}": "{",
+        ">": "<",
+        "(": ")",
+        "[": "]",
+        "{": "}",
+        "<": ">"
+    }
+
+    let cursor = [];
+    for (let char of chars){
+        if(openChars.has(char)){
+            cursor.push(char);
+        } else {
+            let tmp = cursor.pop();
+            if (char !== charMap[tmp]) {
+                cursor = []
+                break;
+            }
+        }
+    }
+    return processNewPoints(cursor.reverse());
+}
+
+export const scoreRemainingSyntax = (lines: string[]): number => {
+    let response = [];
+    for (let line of lines) {
+        response.push(processLine2(line));
+    }
+    response = response.filter((val) => val > 0).sort((a, b) => a-b);
+    return response[Math.floor(response.length/2)];
+}
+
+
+export const processLine = (line: string): number => {
+    const chars = line.split('');
+    const openChars = new Set(["(", "[", "{", "<"]);
+    const charMap = {
+        ")": "(",
+        "]": "[",
+        "}": "{",
+        ">": "<",
+        "(": ")",
+        "[": "]",
+        "{": "}",
+        "<": ">"
+    }
+
+    let cursor = [];
+    let illegalChar;
+    for (let char of chars){
+        if(openChars.has(char)){
+            cursor.push(char);
+        } else {
+            let tmp = cursor.pop();
+            if (char !== charMap[tmp]) {
+                illegalChar = char;
+                break;
+            }
+        }
+    }
+    return illegalChar ? countPoints(illegalChar) : 0;
+}
+
+export const scoreIllegalSyntax = (lines: string[]): number => {
+    let response = 0;
+    for (let line of lines) {
+        response += processLine(line);
+    }
+    return response;
+}
+
+/**
  * Day 9
  */
 const findLocalMins = (matrix: number[][]): number[][] => {
@@ -46,7 +272,12 @@ const nextCoordinates = ([row, col]: number[], matrix: number[][]) => {
 
     const nextAvail: number[][] = [];
     for (let [r, c] of traversalPoints){
-        if(matrix[row+r] && matrix[row+r][col+c] !== undefined && matrix[row+r][col+c] !== 9 && matrix[row][col] < matrix[row+r][col+c]){
+        if(
+            matrix[row+r] 
+            && matrix[row+r][col+c] !== undefined 
+            && matrix[row+r][col+c] !== 9 
+            && matrix[row][col] < matrix[row+r][col+c]
+        ){
             nextAvail.push([row+r, col+c]);
         }
     }

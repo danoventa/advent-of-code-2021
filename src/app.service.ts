@@ -1,12 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, deccodeForReal, decode, findLocalMinimum, generateBingoGame, generateCloudCoordinates, loadFirstFish, multiplicate3MaxBasins, readBingos, readFileByLine, readFileByWindow, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
+import { BingoCard, BingoGame, BingoWinners, calculateAim, calculateBingoSum, calculateCoordinates, calculateFishies, captureIncrement, checkCard, CloudCoordinatesReadout, CloudCoordinateTracking, countDangerZones, countIncrementsCurry, deccodeForReal, decode, findLocalMinimum, generateBingoGame, generateCloudCoordinates, loadFirstFish, multiplicate3MaxBasins, readBingos, readFileByLine, readFileByWindow, scoreIllegalSyntax, scoreRemainingSyntax, solveProblem11P1, solveProblem11P2, sumArray, trackCloudCoordinates, translateCoordinatesFromLine } from './utils';
 
 @Injectable()
 export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+
+
+  /**
+   * Day 11
+   */
+   getDay11Part1(): number {
+    let lines: string[] = [];
+    for (let line of readFileByLine('/inputs/day11inputs.txt', 'txt')){
+      lines.push(line as string);
+    }
+
+    return solveProblem11P1(lines, 100);
+  }
+
+
+  getDay11Part2(): number {
+    let lines: string[] = [];
+    for (let line of readFileByLine('/inputs/day11inputs.txt', 'txt')){
+      lines.push(line as string);
+    }
+
+    return solveProblem11P2(lines, Infinity);
+  }
+
+   /**
+   * 
+   * Day 10 
+   */
+    getDay10Part1(): number {
+      let lines: string[] = [];
+      for (let line of readFileByLine('/inputs/day10inputs.txt', 'txt')){
+        lines.push(line as string);
+      }
+  
+      return scoreIllegalSyntax(lines);
+    }
+  
+  
+    getDay10Part2(): number {
+      let lines: string[] = [];
+      for (let line of readFileByLine('/inputs/day10inputs.txt', 'txt')){
+        lines.push(line as string);
+      }
+  
+      return scoreRemainingSyntax(lines);
+    }
+  
 
   /**
    * 

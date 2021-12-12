@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-describe('AppController', () => {
+describe.skip('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
@@ -19,6 +19,37 @@ describe('AppController', () => {
       expect(appController.getHello()).toBe('Hello World!');
     });
   });
+
+  /**
+ * Day 11
+ */
+ describe('day 11 part 1', () => {
+  it('should be the answer to day 11 part 1', () => {
+    expect(appController.getDay11Part1()).toBe(1755);
+  });
+});
+  
+describe('day 11 part 2', () => {
+  it('should be the answer to day 11 part 2', () => {
+    expect(appController.getDay11Part2()).toBe(212);
+  });
+});
+
+
+  /**
+ * Day 10
+ */
+ describe('day 10 part 1', () => {
+  it('should be the answer to day 10 part 1', () => {
+    expect(appController.getDay10Part1()).toBe(318099);
+  });
+});
+  
+describe('day 10 part 2', () => {
+  it('should be the answer to day 10 part 2', () => {
+    expect(appController.getDay10Part2()).toBe(2389738699);
+  });
+});
 
 /**
  * Day 9

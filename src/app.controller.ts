@@ -9,6 +9,38 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+/**
+ * 
+ * Day 11
+ */
+
+ @Get() 
+ getDay11Part1(): number {
+   return this.appService.getDay11Part1();
+ }
+
+ @Get() 
+ getDay11Part2(): number {
+   return this.appService.getDay11Part2();
+ }
+
+
+  /**
+ * 
+ * Day 10
+ */
+
+ @Get() 
+ getDay10Part1(): number {
+   return this.appService.getDay10Part1();
+ }
+
+ @Get() 
+ getDay10Part2(): number {
+   return this.appService.getDay10Part2();
+ }
+
+
 
 /**
  * 
