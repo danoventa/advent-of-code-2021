@@ -11,6 +11,7 @@ interface Cave {
 interface CaveSystem {
     [sourcePath: string]: Cave;
 }
+
 const buildCaveSystem = (srcFile: string): CaveSystem => {
     let caveMap: CaveSystem = {};
     for(let line of readFileByLine(`/inputs/${srcFile}`, 'txt')){
@@ -118,7 +119,7 @@ describe.skip("Day 12 part 1", () => {
     })
 })
 
-describe.only("Day 12 part 2", () => {
+describe.skip("Day 12 part 2", () => {
     it('Test out Day 12 part 2 Sample 1', () => {
         expect(solveForPart2('day12sample1.txt')).toBe(36);
     })
