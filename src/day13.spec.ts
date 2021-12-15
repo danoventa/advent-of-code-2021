@@ -114,7 +114,7 @@ const solveDay13part2 = (srcFile) => {
 }
 
 describe('Day 13 part 2', () => {
-    it('Day 13 - Part 2 - Input', () => {
+    it.skip('Day 13 - Part 2 - Input', () => {
         solveDay13part2('day13input.txt');
     });
 });
